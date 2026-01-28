@@ -14,10 +14,14 @@ on:
         options:
           - up
           - down
+      stack:
+        description: "The stack to deploy up or down"
+        required: true
+        default: "default"
 
 jobs:
   defang:
-    name: Defang ${{ github.event.inputs.action || 'up' }}
+    name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default' }}
     environment: production
     runs-on: ubuntu-latest
     permissions:
@@ -28,12 +32,13 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Defang ${{ github.event.inputs.action || 'up' }}
+      - name: Defang ${{ github.event.inputs.action || 'up' }} ${{ github.event.inputs.stack || 'default' }}
         uses: DefangLabs/defang-github-action@v1.4.0
         with:
           cli-version: nightly # for config-vars-init-random
           config-vars-init-random: DJANGO_SECRET_KEY POSTGRES_PASSWORD
           command: ${{ github.event.inputs.action || 'up' }}
+          stack: ${{ github.event.inputs.stack || '' }}
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -41,4 +46,6 @@ jobs:
       - name: Deployment Summary
         uses: DefangLabs/defang-github-action@v1.4.0
         with:
+          cli-version: nightly # for config-vars-init-random
           command: services
+          stack: ${{ github.event.inputs.stack || '' }}
