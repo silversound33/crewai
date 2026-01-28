@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - ".github/workflows/**"
   workflow_dispatch:
     inputs:
       action:
@@ -15,7 +17,7 @@ on:
           - up
           - down
       stack:
-        description: "The stack to deploy up or down"
+        description: "The stack to use"
         required: true
         default: ""
 
