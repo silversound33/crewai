@@ -17,7 +17,7 @@ on:
       stack:
         description: "The stack to deploy up or down"
         required: true
-        default: "default"
+        default: ""
 
 jobs:
   defang:
